@@ -1,0 +1,30 @@
+import cv2 
+import numpy as np
+import face_recognition
+
+print('Loading....')
+
+imgElon = face_recognition.load_image_file('images\elonfather.jpg') # place the path to the image to load
+imgElon = cv2.cvtColor(imgElon, cv2.COLOR_BGR2RGB)
+imgElonTest = face_recognition.load_image_file('images\elonimage.jpg') # place the path to the image to load
+imgElonTest = cv2.cvtColor(imgElonTest, cv2.COLOR_BGR2RGB)
+
+faceLoc = face_recognition.face_locations(imgElon)[0] #this will find the faces in the image and find the encodings of the images
+encodeElon = face_recognition.face_encodings(imgElon)[0]
+cv2.rectangle(imgElon, (faceLoc[3],faceLoc[0]),(faceLoc[1],faceLoc[2]), (255,0,0) )
+
+faceLocTest = face_recognition.face_locations(imgElonTest)[0] #this will find the faces in the image and find the encodings of the images
+encodeElonTest = face_recognition.face_encodings(imgElonTest)[0]
+cv2.rectangle(imgElonTest, (faceLocTest[3],faceLocTest[0]),(faceLocTest[1],faceLocTest[2]), (255,0,0) )
+
+
+results = face_recognition.compare_faces([encodeElon], encodeElonTest) # checks to see if the facial structure is a match
+faceDis = face_recognition.face_distance ([encodeElon] , encodeElonTest) # checks how much of a match the two images are, the lower the distance then it is a better match
+print(results, faceDis)
+print(faceLoc,faceLocTest) #prints out top bottom right and left 
+
+cv2.putText(imgElonTest, f'{results} {round(faceDis[0],2)}',(50,50), cv2.FONT_HERSHEY_SIMPLEX, 1,(0,0,255), 2)
+
+cv2.imshow('Elon Musk' , imgElon)
+cv2.imshow('Elon Test' , imgElonTest)
+cv2.waitKey(0)
