@@ -1,0 +1,36 @@
+import cv2
+from random import randrange
+
+
+known_faces = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+
+
+#  img = cv2.imread('faces.jpg')  # loads the image
+webcam = cv2.VideoCapture(0)  # captures video from a webcam, 0 captures the default cam
+
+#  loop over every frame of the video
+while True:
+    successful_frame, frame = webcam.read()
+
+    # convert image to greyscale
+    grayscaled_img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # takes the src and then the conversion you want to do
+    # detect faces
+    face_coordinates = known_faces.detectMultiScale(grayscaled_img)  # multi-scale looks for the relation of all the
+    # different face sizes, whether it is small or big, detects objects of different sizes in the input image
+    for (x, y, w, h) in face_coordinates:
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (randrange(256), randrange(256), randrange(256)), 2)
+    cv2.imshow('Face Detector', frame)  # shows the image on screen and names the window
+    key = cv2.waitKey(1)  # Pauses the image window, in openCV without wait key it cannot display anything
+
+    if key == 81 or key == 113:
+        break
+
+webcam.release()
+
+# angles | color | thickness
+
+#  183 = height and 67 = width offset from the edges
+print(face_coordinates)
+print("code completed")
+
+
